@@ -1,0 +1,7 @@
+.venv/*
+.idea/*
+*.code-workspace
+portfolio/catalog/__pycache__/*
+portfolio/portfolio/__pycache__/*
+portfolio/catalog/migrations/__pycache__/*
+portfolio/portfolio/__pycache__/*
