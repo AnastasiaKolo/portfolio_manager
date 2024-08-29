@@ -65,10 +65,11 @@ class Artwork(models.Model):
     height = models.IntegerField()
     availability = models.BooleanField(default=False)
     price = models.IntegerField()
-    tags = models.ManyToManyField(Tag, related_name="artworks", help_text="Select tags for this artwork")
+    tags = models.ManyToManyField(Tag, related_name="artworks",
+        help_text="Select tags for this artwork")
 
     def __str__(self):
-            return f"{self.title}, {self.created}"
+        return f"{self.title}, {self.created}"
 
     def get_absolute_url(self):
         """Returns the URL to access a particular instance of the model."""
@@ -87,10 +88,29 @@ class Artwork(models.Model):
 
 class Project(models.Model):
     """ A project can unite several artworks """
-    title = models.CharField(max_length=200, help_text="Enter title for an item")
+    title = models.CharField(max_length=200, help_text="Enter project title")
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    description = models.CharField(max_length=2000, help_text="Enter item description")
+    description = models.CharField(max_length=2000, help_text="Enter project description")
     created = models.DateTimeField("date created", default=timezone.now)
     artworks = models.ManyToManyField(Artwork, related_name="projects",
         help_text="Select artworks for this project ")
 
+
+class Event(models.Model):
+    """ Any art related event """
+    EVENT_TYPE_CHOICES = {
+        "E": "Exhibition/Show",
+        "P": "Publication/Press",
+        "C": "Contest/Open Call",
+        "R": "Arts Residency"
+    }
+    name = models.CharField(max_length=200, help_text="Enter event name")
+    # use e.get_type_display() - to show choice description
+    type = models.CharField(max_length=2, choices=EVENT_TYPE_CHOICES)
+    description = models.CharField(max_length=2000, help_text="Enter description of the event")
+    contact = models.CharField(max_length=2000, help_text="Enter description of the event")
+    place = models.CharField(max_length=200, help_text="Address of the event", blank=True)
+    link = models.CharField(max_length=200, help_text="Web link to the event", blank=True)
+    date = models.DateTimeField("Date of the event")
+    deadline = models.DateTimeField("Deadline date for applying to the event", blank=True)
+    comment = models.CharField(max_length=2000, blank=True)
