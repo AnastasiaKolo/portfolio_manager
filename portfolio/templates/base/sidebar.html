@@ -1,39 +1,17 @@
-
 <div class="p-3">
-    {% if user.is_authenticated %}
-        <p>
-            <a class="btn btn-primary"
-                href="{% url "qa:question_create" %}">
-                Ask question
-            </a>
-        </p>
-        <p>
-            <a class="btn btn-secondary"
-                href="{% url "qa:tag_create" %}">
-                Create tag
-            </a>
-        </p>
-    {% endif %}
-    <p>
-        <a class="btn btn-secondary"
-            href="{% url "qa:tag_list" %}">
-            All tags
-        </a>
-    </p>
-</div>
-<div class="p-3 sidebar_questions">
-    <h4>Trending</h4>
-    {% load qa_extras %}
-    {% top_questions as top_q %}
-
-    <ol class="list-unstyled mb-0">
-    {% for q in top_q %}
-        <li>
-            <span class="badge bg-secondary">{{ q.votes_count }}</span>
-            <a href="{{ q.url }}">
-                {{ q.title|truncatewords:4 }}
-            </a>
-        </li>
-    {% endfor %}
-    </ol>
+    <nav class="nav flex-column">
+        <a class="nav-link" href="{% url "catalog:index" %}">Artworks</a>
+        <a class="nav-link" href="#">Events</a>
+        <a class="nav-link" href="#">Projects</a>
+        <a class="nav-link" href="{% url "catalog:tag_list" %}">Tags</a>
+        {% if user.is_authenticated %}
+            <a class="nav-link" href="{% url "catalog:artwork_upload" %}">Upload artwork</a>
+            <a class="nav-link" href="{% url "catalog:tag_create" %}">Create tag</a>
+            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Store</a>
+        {% endif %}
+        {% if user.is_staff %}
+            <a class="nav-link" href="{% url 'admin:index' %}">Site administration</a>
+        {% endif %}
+        <a class="nav-link" href="{% url "catalog:tag_list" %}">Contact</a>
+    </nav>
 </div>

@@ -1,0 +1,43 @@
+{% extends "base/generic.html" %}
+{% load static %}
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm">
+            <h3>{{ title }}</h3>
+            {% if artworks %}
+                {% for artwork in artworks %}
+                    <div class="card">
+                        <div class="card-body">
+                            <a href="{% url 'catalog:artwork_detail' artwork.id %}">
+                                {{ artwork.title|truncatewords:10 }}
+                            </a>
+                            <p class="card-text">{{ artwork.text|truncatewords:20 }}</p>
+                            {% for tag in artwork.tags.all %}
+                                <a 
+                                    class="btn btn-outline-secondary btn-sm" 
+                                    href="{% url 'catalog:tag_detail' tag.text %}">
+                                    {{ tag.text }}
+                                </a>
+                            {% endfor %}
+                            {% include "catalog/artwork_buttons.html" %}
+                        </div>
+                        <div class="card-footer text-muted">
+                            {% if artwork.author.profile.avatar %}
+                                <img src="{{ artwork.author.profile.avatar.url }}" width=32 height="32" />
+                            {% else %}
+                                <img src="{% static "catalog/img/default_avatar.png" %}" width=32 height="32" />
+                            {% endif %}
+                            <a href="">{{ artwork.author }}</a> <strong> asked </strong> {{ artwork.created }}
+                        </div>
+                    </div>
+                {% endfor %}
+                {% include "base/paginator.html" with page_obj=page_obj %}
+            {% else %}
+                <p>No artworks are available.</p>
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+{% endblock %}

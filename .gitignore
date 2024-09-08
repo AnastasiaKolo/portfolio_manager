@@ -7,3 +7,7 @@ portfolio/catalog/migrations/__pycache__/*
 portfolio/portfolio/__pycache__/*
 portfolio/users/__pycache__/*
 portfolio/users/migrations/*
+portfolio/catalog/migrations/*
+portfolio/artworks/*
+portfolio/static/catalog/img/*
+portfolio/avatars/*

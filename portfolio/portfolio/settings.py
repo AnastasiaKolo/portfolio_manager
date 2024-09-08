@@ -127,9 +127,13 @@ LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.1/howto/static-files/
+# https://stackoverflow.com/questions/12809416/django-static-files-404
 
-STATIC_URL = 'static/'
+STATIC_ROOT = ''
+
+STATIC_URL = '/static/'
+
+STATICFILES_DIRS = ('static',)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -155,3 +159,6 @@ if not TESTING:
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 MAX_FILE_SIZE = 102400
+
+# pagination settings
+PAGINATE_ARTWORKS = 10

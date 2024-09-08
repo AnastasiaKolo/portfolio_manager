@@ -1,0 +1,11 @@
+{% if user.is_authenticated %}
+    <a 
+        class="btn btn-outline-secondary btn-sm" 
+        href=""
+        >Buy</a>
+    <span>{{ question.votes_count }}</span>
+    <a 
+        class="btn btn-outline-secondary btn-sm" 
+        href="" 
+        >Add to favorites</a>
+{% endif %}

@@ -1,0 +1,26 @@
+{% extends "base/generic.html" %}
+{% load static %}
+{% block content %}
+    <h3><b>{{ artwork.title }}</b> by {{ artwork.author }}</h3>
+    <p>
+        {% if artwork.author.profile.avatar %}
+            <img src="{{ artwork.author.profile.avatar.url }}" width=32 height="32" />
+        {% else %}
+            <img src="{% static "catalog/img/default_avatar.png" %}" width=32 height="32" />
+        {% endif %}
+        <!-- author detail link not yet defined -->
+        <a href="">{{ artwork.author }}</a> 
+        {{ artwork.created }}
+    </p>
+    <p>{{ artwork.category }}</p>
+    <p><img src="{{ artwork.image.url }}"  class="img-fluid" alt="Oops! Image is absent" /></p>
+    <p>{{ artwork.description }}</p>
+    {% if artwork.tags.all %}
+        <p><strong>Tags:</strong> 
+            {% for tag in artwork.tags.all %}
+                <a href="{% url 'catalog:tag_detail' tag.text %}">{{ tag.text }}</a>
+            {% endfor %}
+        </p>
+    {% endif %}
+    {% include "catalog/artwork_buttons.html" %}
+{% endblock %}

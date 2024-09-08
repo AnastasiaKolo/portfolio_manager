@@ -1,18 +1,15 @@
 """ Models for Portfolio application """
-import datetime 
-from typing import Union
 
-from django.contrib import admin
 from django.contrib.auth.models import User
-from django.db import models, transaction
-from django.utils import timezone
-
+from django.db import models
 from django.urls import reverse
+from django.utils import timezone
 
 
 class Tag(models.Model):
     """ Tags for works/projects """
-    text = models.CharField(max_length=200, unique=True, help_text="Enter tags for an item")
+    text = models.CharField(max_length=30, unique=True, help_text="Enter tags for an item",
+                            blank=False)
 
     def __str__(self):
         return f"{self.text}"
@@ -27,10 +24,14 @@ class Tag(models.Model):
         ]
         ordering = ["text"]
 
-
     def get_absolute_url(self):
         """Returns the URL to access a particular instance of the model."""
+        # TODO check for encoding
         return reverse('catalog:tag_detail', args=[str(self.text)])
+
+    @property
+    def url(self):
+        return self.get_absolute_url()
 
 
 class Category(models.Model):
@@ -47,10 +48,18 @@ class Category(models.Model):
             ),
         ]
         ordering = ["name"]
+        verbose_name_plural = "categories"
 
     def __str__(self):
         return f"{self.name}"
 
+    def get_absolute_url(self):
+        """Returns the URL to access a particular instance of the model."""
+        return reverse('catalog:category_detail', args=[str(self.id)])
+
+    @property
+    def url(self):
+        return self.get_absolute_url()
 
 class Artwork(models.Model):
     """ A single piece of art """
@@ -67,6 +76,10 @@ class Artwork(models.Model):
     price = models.IntegerField()
     tags = models.ManyToManyField(Tag, related_name="artworks",
         help_text="Select tags for this artwork")
+    image = models.ImageField(
+        verbose_name="Artwork picture", upload_to="artworks",
+        blank=True, null=True
+    )
 
     def __str__(self):
         return f"{self.title}, {self.created}"
@@ -94,6 +107,21 @@ class Project(models.Model):
     created = models.DateTimeField("date created", default=timezone.now)
     artworks = models.ManyToManyField(Artwork, related_name="projects",
         help_text="Select artworks for this project ")
+    image = models.ImageField(
+        verbose_name="Project picture", upload_to="projects",
+        blank=True, null=True
+    )
+
+    def __str__(self):
+        return f"{self.name}"
+
+    def get_absolute_url(self):
+        """Returns the URL to access a particular instance of the model."""
+        return reverse('catalog:project_detail', args=[str(self.id)])
+
+    @property
+    def url(self):
+        return self.get_absolute_url()
 
 
 class Event(models.Model):
@@ -114,3 +142,20 @@ class Event(models.Model):
     date = models.DateTimeField("Date of the event")
     deadline = models.DateTimeField("Deadline date for applying to the event", blank=True)
     comment = models.CharField(max_length=2000, blank=True)
+    artworks = models.ManyToManyField(Artwork, related_name="events",
+        help_text="Select artworks for this event ")
+    poster = models.ImageField(
+        verbose_name="Event poster", upload_to="events",
+        blank=True, null=True
+    )
+
+    def __str__(self):
+        return f"{self.name}"
+
+    def get_absolute_url(self):
+        """Returns the URL to access a particular instance of the model."""
+        return reverse('catalog:event_detail', args=[str(self.id)])
+
+    @property
+    def url(self):
+        return self.get_absolute_url()
