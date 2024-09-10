@@ -16,13 +16,9 @@
 
     <main role="main" class="container">
         <div class="row">
-            <div class="col-md-9 blog-main">
-                <h1>{% block h1 %}Portfolio manager{% endblock %}</h1>
+            <div class="col-md-12 blog-main">
                 {% block content %}Test{% endblock %}
             </div>
-            <aside class="col-md-3 blog-sidebar">
-                {% include "base/sidebar.html" %}
-            </aside>
         </div>
     </main>
 

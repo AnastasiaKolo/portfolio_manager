@@ -1,0 +1,32 @@
+{% extends "base/generic.html" %}
+{% load static %}
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm">
+            <h3>{{ title }}</h3>
+            {% if artists %}
+                {% for artist in artists %}
+                    <div class="card">
+                        <div class="card-body">
+                            <a href="{% url 'catalog:artist_detail' artist.id %}">
+                                {{ artist.alias|truncatewords:10 }}
+                            </a>
+                            <img src="{{ artist.image_thumbnail.url }}" height=25 class="img-thumbnail" alt="Image not found">
+                            <p class="card-text">{{ artist.bio|truncatewords:20 }}</p>
+                            
+                        </div>
+                        <div class="card-footer text-muted">
+                            <img src="{{ artist.image_thumbnail.url }}"/>
+                        </div>
+                    </div>
+                {% endfor %}
+                {% include "base/paginator.html" with page_obj=page_obj %}
+            {% else %}
+                <p>No artists are available.</p>
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+{% endblock %}

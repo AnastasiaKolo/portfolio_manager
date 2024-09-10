@@ -1,0 +1,24 @@
+{% extends "base/generic.html" %}
+{% load static %}
+{% block content %}
+    <h3><b>{{ artist.alias }}</b></h3>
+    <p><img src="{{ artist.image_thumbnail.url }}"/></p>
+    {% if artist.bio %}
+        <p>Bio: {{ artist.bio }}</p>
+    {% endif %}
+    {% if artist.statement %}
+        <p>Artist's statement: {{ artist.statement }}</p>
+    {% endif %}
+    {% if artworks %}
+        <h4>Artworks:</h4>
+
+        {% for artwork in artworks %}
+            <hr />
+            <p>{{ artwork.title }}</p>
+            <p class="text-muted"> {{ artwork.created }}</p>
+            <p><img src="{{ artwork.image_thumbnail.url }}"/></p>
+        {% endfor %}
+        {% include "base/paginator.html" with page_obj=artworks_page_obj %}
+    {% endif %}
+
+{% endblock %}

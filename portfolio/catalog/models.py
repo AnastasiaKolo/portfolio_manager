@@ -1,10 +1,13 @@
 """ Models for Portfolio application """
 
+from django.contrib import admin
 from django.contrib.auth.models import User
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
-
+from django.utils.html import mark_safe
+from imagekit.models import ImageSpecField  #, ProcessedImageField
+from imagekit.processors import SmartResize, ResizeToFill
 
 class Tag(models.Model):
     """ Tags for works/projects """
@@ -61,28 +64,67 @@ class Category(models.Model):
     def url(self):
         return self.get_absolute_url()
 
+
+class Artist(models.Model):
+    """ An Author of an Artwork can be registered site user or not """
+    alias = models.CharField(max_length=200, unique=True, help_text="Artist's alias or pseudonim")
+    user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True, blank=True)
+    bio = models.TextField(max_length=5000, help_text="Some info about the artist", blank=True)
+    cv = models.FileField(upload_to='cvs', blank=True)
+    statement = models.TextField(max_length=5000, help_text="Artist's statement", blank=True)
+    image = models.ImageField(
+            verbose_name="Artist's portrait", upload_to="artists",
+            blank=True, null=True
+        )
+    image_thumbnail = ImageSpecField(
+        processors=[ResizeToFill(32, 32)],
+        format='JPEG',
+        options={'quality': 90})
+
+    def __str__(self):
+        return f"{self.alias}"
+
+    def get_absolute_url(self):
+        """Returns the URL to access a particular instance of the model."""
+        return reverse('catalog:artist_detail', args=[str(self.id)])
+
+    @property
+    def url(self):
+        return self.get_absolute_url()
+
+
 class Artwork(models.Model):
     """ A single piece of art """
     title = models.CharField(max_length=200, help_text="Enter title for an item")
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.ForeignKey(Artist, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.PROTECT)
-    description = models.CharField(max_length=2000, help_text="Enter item description")
+    description = models.TextField(max_length=5000, help_text="Enter item description", blank=True)
     materials = models.CharField(max_length=200, help_text="Enter materials for an item")
     created = models.DateTimeField("date created", default=timezone.now)
     length = models.IntegerField()
     width = models.IntegerField()
-    height = models.IntegerField()
+    height = models.IntegerField(default=0, blank=True)
     availability = models.BooleanField(default=False)
-    price = models.IntegerField()
+    price = models.IntegerField(null=True, blank=True)
     tags = models.ManyToManyField(Tag, related_name="artworks",
         help_text="Select tags for this artwork")
     image = models.ImageField(
         verbose_name="Artwork picture", upload_to="artworks",
         blank=True, null=True
     )
+    image_thumbnail = ImageSpecField(
+        processors=[SmartResize(550, 550)],
+        format='JPEG',
+        options={'quality': 90})
+    published = models.BooleanField(default=True)
+
 
     def __str__(self):
         return f"{self.title}, {self.created}"
+
+    @admin.display(description='Thumbnail')
+    def thumbnail_img_tag(self):
+        return mark_safe(f'<img src="{self.image_thumbnail.url}" />')
 
     def get_absolute_url(self):
         """Returns the URL to access a particular instance of the model."""
@@ -103,7 +145,7 @@ class Project(models.Model):
     """ A project can unite several artworks """
     title = models.CharField(max_length=200, help_text="Enter project title")
     author = models.ForeignKey(User, on_delete=models.CASCADE)
-    description = models.CharField(max_length=2000, help_text="Enter project description")
+    description = models.TextField(max_length=5000, help_text="Enter project description")
     created = models.DateTimeField("date created", default=timezone.now)
     artworks = models.ManyToManyField(Artwork, related_name="projects",
         help_text="Select artworks for this project ")
@@ -111,6 +153,10 @@ class Project(models.Model):
         verbose_name="Project picture", upload_to="projects",
         blank=True, null=True
     )
+    image_thumbnail = ImageSpecField(
+        processors=[SmartResize(256, 256)],
+        format='JPEG',
+        options={'quality': 90})
 
     def __str__(self):
         return f"{self.name}"
@@ -135,19 +181,23 @@ class Event(models.Model):
     name = models.CharField(max_length=200, help_text="Enter event name")
     # use e.get_type_display() - to show choice description
     type = models.CharField(max_length=2, choices=EVENT_TYPE_CHOICES)
-    description = models.CharField(max_length=2000, help_text="Enter description of the event")
-    contact = models.CharField(max_length=2000, help_text="Enter description of the event")
+    description = models.TextField(max_length=5000, help_text="Enter description of the event")
+    contact = models.EmailField(max_length=254, help_text="Contact email address")
     place = models.CharField(max_length=200, help_text="Address of the event", blank=True)
-    link = models.CharField(max_length=200, help_text="Web link to the event", blank=True)
+    link = models.URLField(max_length=200, help_text="Web link to the event", blank=True)
     date = models.DateTimeField("Date of the event")
     deadline = models.DateTimeField("Deadline date for applying to the event", blank=True)
-    comment = models.CharField(max_length=2000, blank=True)
+    comment = models.TextField(max_length=5000, blank=True)
     artworks = models.ManyToManyField(Artwork, related_name="events",
         help_text="Select artworks for this event ")
     poster = models.ImageField(
         verbose_name="Event poster", upload_to="events",
         blank=True, null=True
     )
+    poster_thumbnail = ImageSpecField(
+        processors=[SmartResize(256, 256)],
+        format='JPEG',
+        options={'quality': 90})
 
     def __str__(self):
         return f"{self.name}"

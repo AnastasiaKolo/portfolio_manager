@@ -15,8 +15,17 @@ from django.utils.text import Truncator
 from django.views.generic import ListView, DetailView, RedirectView
 from django.views.generic.edit import CreateView
 
-from .models import Artwork, Category, Tag, Project, Event
-from .forms import ArtworkForm, TagForm, EventForm, ProjectForm
+from .models import Artwork, Category, Tag, Project, Event, Artist
+from .forms import ArtworkForm, TagForm, EventForm, ProjectForm, ArtistForm
+
+
+class ArtistListView(ListView):
+    """ View for listing all artists """
+    template_name = "catalog/artist_list.html"
+    context_object_name = "artists"
+    allow_empty = True
+    model = Artist
+    paginate_by = settings.PAGINATE_ARTISTS
 
 
 class BaseArtworkListView(ListView):
@@ -38,7 +47,7 @@ class ArtworkListView(BaseArtworkListView):
 
 
 class ArtworkSearchListView(BaseArtworkListView):
-    
+    """ View for search results """
     def get_queryset(self):
         """ Return ordered artworks list as query results """
         query = self.request.GET.get("query")
@@ -54,7 +63,7 @@ class ArtworkSearchListView(BaseArtworkListView):
 
 
 class ArtworkByTagListView(BaseArtworkListView):
-
+    """ Show artworks by tag """
     def get_queryset(self):
         """ Return artworks by given tag """
         tag_text = self.kwargs.get("tag_text")
@@ -76,6 +85,34 @@ class ArtworkDetailView(DetailView):
     context_object_name = "artwork"
 
 
+class ArtistDetailView(DetailView):
+    """ Shows Artist details"""
+    model = Artist
+    template_name = "catalog/artist_detail.html"
+    context_object_name = "artist"
+    artworks_paginate_by = settings.PAGINATE_ARTWORKS
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        artworks_page = self.request.GET.get("page", 1)
+
+        artworks = self.object.artwork_set.all()
+        context["artworks"] = artworks
+        artworks_paginator = paginator.Paginator(
+            artworks, self.artworks_paginate_by
+        )
+
+        try:  # Catch invalid page numbers
+            artworks_page_obj = artworks_paginator.page(artworks_page)
+        except (paginator.PageNotAnInteger, paginator.EmptyPage):
+            artworks_page_obj = artworks_paginator.page(1)
+
+        context["artworks_page_obj"] = artworks_page_obj
+        context["artworks"] = artworks_page_obj.object_list
+
+        return context
+
 class TagCreate(LoginRequiredMixin, CreateView):
     """ Create new tag """
     model = Tag
@@ -88,6 +125,8 @@ class ArtworkUpload(LoginRequiredMixin, CreateView):
     model = Artwork
     form_class = ArtworkForm
 
-    def form_valid(self, form):
-        form.instance.author = self.request.user
-        return super().form_valid(form)
+
+class ArtistCreate(LoginRequiredMixin, CreateView):
+    """ Create Artist """
+    model = Artist
+    form_class = ArtistForm

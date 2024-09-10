@@ -3,18 +3,21 @@
 {% block content %}
     <h3><b>{{ artwork.title }}</b> by {{ artwork.author }}</h3>
     <p>
-        {% if artwork.author.profile.avatar %}
-            <img src="{{ artwork.author.profile.avatar.url }}" width=32 height="32" />
-        {% else %}
-            <img src="{% static "catalog/img/default_avatar.png" %}" width=32 height="32" />
-        {% endif %}
         <!-- author detail link not yet defined -->
-        <a href="">{{ artwork.author }}</a> 
+        <a href="#">
+            {% if artwork.author.profile.avatar %}
+                <img src="{{ artwork.author.profile.avatar_thumbnail.url }}"/>
+            {% else %}
+                <img src="{% static "catalog/img/default_avatar_thumbnail.jpg" %}"/>
+            {% endif %}
+        </a> 
         {{ artwork.created }}
     </p>
-    <p>{{ artwork.category }}</p>
     <p><img src="{{ artwork.image.url }}"  class="img-fluid" alt="Oops! Image is absent" /></p>
-    <p>{{ artwork.description }}</p>
+    <p>Category: {{ artwork.category }}</p>
+    {% if artwork.description %}
+        <p>Description: {{ artwork.description }}</p>
+    {% endif %}
     {% if artwork.tags.all %}
         <p><strong>Tags:</strong> 
             {% for tag in artwork.tags.all %}

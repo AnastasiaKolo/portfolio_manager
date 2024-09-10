@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'catalog.apps.CatalogConfig', # This object was created for us in /catalog/apps.py
     'users.apps.UsersConfig',
+    'imagekit',
 ]
 
 MIDDLEWARE = [
@@ -162,3 +163,7 @@ MAX_FILE_SIZE = 102400
 
 # pagination settings
 PAGINATE_ARTWORKS = 10
+PAGINATE_ARTISTS = 5
+
+# gallery settings
+GALLERY_PREVIEW_SIZE = 256

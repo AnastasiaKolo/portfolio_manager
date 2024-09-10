@@ -1,28 +1,26 @@
 """ Users profile model for Portfolio application """
-from PIL import Image
 
 from django.db import models
 from django.contrib.auth.models import User
-
+from imagekit.models import ImageSpecField, ProcessedImageField
+from imagekit.processors import ResizeToFill
 
 class Profile(models.Model):
     """ Add some fields to built-in Django user class """
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    avatar = models.ImageField(
-        verbose_name="Profile picture", upload_to="avatars",
-        blank=True, null=True
+    avatar = ProcessedImageField(
+        upload_to='avatars',
+        processors=[ResizeToFill(256, 256)],
+        format='JPEG',
+        options={'quality': 90},
+        default='default_avatar.jpg'
     )
-    
-    def __str__(self):
-        return self.user.username
-    
-    def save(self, *args, **kwargs):
-        """ Resizing avatar images on save"""
-        super().save()
-        if self.avatar:
-            img = Image.open(self.avatar.path)
+    avatar_thumbnail = ImageSpecField(source='avatar',
+        processors=[ResizeToFill(32, 32)],
+        format='JPEG',
+        options={'quality': 90}
+    )
 
-            if img.height > 256 or img.width > 256:
-                new_img = (256, 256)
-                img.thumbnail(new_img)
-                img.save(self.avatar.path)
+    def __str__(self):
+        """ Show user name """
+        return self.user.username

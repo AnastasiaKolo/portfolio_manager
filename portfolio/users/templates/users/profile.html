@@ -7,7 +7,7 @@
         {% if user.profile.avatar %}
             <img src="{{ user.profile.avatar.url }}" height=256 alt="Avatar"/>
         {% else %}
-            <img src="{% static "catalog/img/default_avatar.png" %}" height=256 alt="Avatar"/>
+            <img src="{% static "catalog/img/default_avatar.jpg" %}" height=256 alt="Avatar"/>
         {% endif %}
     </p>
     {% if user_form.errors %}

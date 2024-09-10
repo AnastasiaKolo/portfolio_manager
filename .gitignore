@@ -11,3 +11,5 @@ portfolio/catalog/migrations/*
 portfolio/artworks/*
 portfolio/static/catalog/img/*
 portfolio/avatars/*
+portfolio/CACHE/*
+portfolio/artists/*

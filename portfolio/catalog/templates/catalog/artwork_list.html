@@ -1,6 +1,85 @@
 {% extends "base/generic.html" %}
 {% load static %}
+
 {% block content %}
+
+
+<div class="container-lg text-center">
+
+    {# artwork listings #}
+    {% if artworks|length == 0 %}
+    {# Display error message instead of empty artwork list #}
+    <div class="my-5 py-5">
+        <p class="fs-5 py-4">Sorry, no artworks were found.</p>
+    </div>
+    {% else %}
+    <div class="mt-1 mb-5">
+        
+        <div class="row justify-content-lg-center">
+        {% for artwork in artworks %}
+            <div class="col-lg-4 my-3 my-lg-4 gx-3 mx-lg-3 mx-xxl-5 justify-content-center d-flex">
+                <div class="border bg-light">
+                    <a href="{{ artwork.get_absolute_url }}">
+                        <img src="{{ artwork.image_thumbnail.url }}" alt="{{ artwork.title }}" class="img-fluid">
+                    </a>
+                    <p class="pt-4 pb-0 px-3">
+                        <a class="h5 text-dark text-decoration-none" href="{{ artwork.get_absolute_url }}">
+                        {{ artwork.title }}
+                        </a>
+                    </p>
+                    <div class="pb-3 text-muted">
+                        <i class="bi bi-calendar-event px-1"></i> {{ artwork.created|date:"F Y" }}
+                    </div>
+                </div>
+            </div>
+            {% if forloop.counter == 2 or forloop.counter == 4 %} {# 2 artworks per row #}
+                </div>
+
+                <div class="row justify-content-lg-center">
+            {% endif %}
+        {% endfor %}
+        </div>
+    
+    </div>
+    {% endif %}{# End of `artworks|length == 0` conditional block #}
+
+    {# Pagination #}
+    {% if page_obj.paginator.num_pages > 1 %}
+    <div class="row justify-content-center d-flex align-items-center mb-5">
+        <div class="col-5 text-end fs-4">
+        <span class="px-3 px-md-5">
+        {% if page_obj.has_previous %}
+            <a class="link-secondary" href="?{% if search_query %}query={{ search_query }}&{% endif %}page=1{% if sorting != 'default' %}&sort={{ sorting }}{% endif %}">&laquo;</a>
+        </span>
+        <span class="px-3 px-md-5">
+            <a class="link-secondary" href="?{% if search_query %}query={{ search_query }}&{% endif %}page={{ page_obj.previous_page_number }}{% if sorting != 'default' %}&sort={{ sorting }}{% endif %}">{{ page_obj.previous_page_number }}</a>
+        {% endif %}
+        </span>
+        </div>
+
+        <div class="col-2 text-center">
+        <span class="h1" aria-current="page">{{ page_obj.number }}</span>
+        </div>
+
+        <div class="col-5 text-start fs-4">
+        <span class="px-3 px-md-5">
+        {% if page_obj.has_next %}
+            <a class="link-secondary" href="?{% if search_query %}query={{ search_query }}&{% endif %}page={{ page_obj.next_page_number }}{% if sorting != 'default' %}&sort={{ sorting }}{% endif %}">{{ page_obj.next_page_number }}</a>
+        </span>
+        <span class="px-3 px-md-5">
+            <a class="link-secondary" href="?{% if search_query %}query={{ search_query }}&{% endif %}page={{ page_obj.paginator.num_pages }}{% if sorting != 'default' %}&sort={{ sorting }}{% endif %}">&raquo;</a>
+        {% endif %}
+        </span>
+        </div>
+    </div>
+    {% endif %}
+
+</div>
+
+
+{% endblock %}
+{% comment %} ######################################################################### {% endcomment %}
+{% comment %} {% block content %}
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm">
@@ -8,11 +87,13 @@
             {% if artworks %}
                 {% for artwork in artworks %}
                     <div class="card">
+                        <img class="card-img-top" src="{{ artwork.image_thumbnail.url }}" alt="Image not found">
                         <div class="card-body">
-                            <a href="{% url 'catalog:artwork_detail' artwork.id %}">
+                            <a class="card-title" href="{% url 'catalog:artwork_detail' artwork.id %}">
                                 {{ artwork.title|truncatewords:10 }}
                             </a>
-                            <p class="card-text">{{ artwork.text|truncatewords:20 }}</p>
+                            <h6 class="card-subtitle mb-2 text-muted">{{ artwork.materials }}</h6>
+                            <p class="card-text">{{ artwork.description|truncatewords:20 }}</p>
                             {% for tag in artwork.tags.all %}
                                 <a 
                                     class="btn btn-outline-secondary btn-sm" 
@@ -23,12 +104,8 @@
                             {% include "catalog/artwork_buttons.html" %}
                         </div>
                         <div class="card-footer text-muted">
-                            {% if artwork.author.profile.avatar %}
-                                <img src="{{ artwork.author.profile.avatar.url }}" width=32 height="32" />
-                            {% else %}
-                                <img src="{% static "catalog/img/default_avatar.png" %}" width=32 height="32" />
-                            {% endif %}
-                            <a href="">{{ artwork.author }}</a> <strong> asked </strong> {{ artwork.created }}
+                            <img src="{{ artwork.author.image_thumbnail.url }}"/>
+                            <a href="">{{ artwork.author }}</a> created in {{ artwork.created|date:"Y" }}
                         </div>
                     </div>
                 {% endfor %}
@@ -40,4 +117,4 @@
 
     </div>
 </div>
-{% endblock %}
+{% endblock %} {% endcomment %}

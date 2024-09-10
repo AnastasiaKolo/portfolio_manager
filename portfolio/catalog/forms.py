@@ -1,7 +1,7 @@
 """ Forms for Catalog app """
 from django.forms import ModelForm, CharField, FileInput, ImageField
 
-from .models import Artwork, Tag, Event, Project
+from .models import Artwork, Tag, Event, Project, Artist
 
 
 class TagForm(ModelForm):
@@ -11,6 +11,22 @@ class TagForm(ModelForm):
     class Meta:
         model = Tag
         fields = ["tag_text",]
+
+
+class ArtistForm(ModelForm):
+    """ Artist register form """
+    image = ImageField(widget=FileInput(attrs={'class': 'form-control-file'}))
+
+    class Meta:
+        model = Artist
+        fields = [
+            "alias",
+            "user",
+            "bio",
+            "cv",
+            "statement",
+            "image"
+        ]
 
 
 class ArtworkForm(ModelForm):
