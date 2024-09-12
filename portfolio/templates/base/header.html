@@ -1,60 +1,92 @@
 {% load static %}
 <header>
-    <nav class="nav">
-        <a class="nav-link" href="{% url "catalog:artist_list" %}">Artists</a>
-        <a class="nav-link" href="{% url "catalog:index" %}">Artworks</a>
-        <a class="nav-link" href="#">Events</a>
-        <a class="nav-link" href="#">Projects</a>
-        <a class="nav-link" href="{% url "catalog:tag_list" %}">Tags</a>
-        {% if user.is_authenticated %}
-            <a class="nav-link" href="{% url "catalog:artist_create" %}">Add artist</a>
-            <a class="nav-link" href="{% url "catalog:artwork_upload" %}">Upload artwork</a>
-            <a class="nav-link" href="{% url "catalog:tag_create" %}">Create tag</a>
-            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Store</a>
-        {% endif %}
-        {% if user.is_staff %}
-            <a class="nav-link" href="{% url 'admin:index' %}">Site administration</a>
-        {% endif %}
-        <a class="nav-link" href="{% url "catalog:tag_list" %}">Contact</a>
-    </nav>
-    <div class="row flex-nowrap justify-content-between align-items-center">
-        <div class="col-12 d-flex justify-content-end align-items-center">
-            <div class="p-2">
-                <form action="{% url "catalog:search_results" %}" method="get" class="search">
-                    <input type="search" name="q" placeholder="Search phrase" class="input" />
-                    <button type="submit" class="btn btn-sm btn-outline-secondary">Search</button>
-                </form>
-            </div>
-            {% if user.is_authenticated %}
-                <div class="p-2">
-                    <a href="{% url "users:profile" %}">
-                    {% if user.profile.avatar %}
-                        <img src="{{ user.profile.avatar_thumbnail.url }}"
-                        alt= {{ user.username|default:"UserName" }}/>
-                    {% else %}
-                        <img src="{% static "catalog/img/default_avatar_thumbnail.jpg" %}" 
-                        alt= {{ user.username|default:"UserName" }}/>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-5">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{% url "catalog:index" %}">Portfolio manager</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" 
+                data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" 
+                aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mt-2 mt-lg-0">
+                    <li class="nav-item dropdown">
+                        <a 
+                            class="nav-link dropdown-toggle" href="#" id="navbarDropdown" 
+                            role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Artists
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{% url "catalog:artist_list" %}">List</a>
+                        {% if user.is_staff %}
+                            <a class="dropdown-item" href="{% url "catalog:artist_create" %}">Add</a>
+                        {% endif %}
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a 
+                            class="nav-link dropdown-toggle" href="#" id="navbarDropdown" 
+                            role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Artworks
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{% url "catalog:index" %}">List</a>
+                        {% if user.is_authenticated %}
+                            <a class="dropdown-item" href="{% url "catalog:artwork_upload" %}">Add</a>
+                        {% endif %}
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{% url "catalog:tag_list" %}">Artwork tags</a>
+                        {% if user.is_authenticated %}
+                            <a class="dropdown-item" href="{% url "catalog:tag_create" %}">Add</a>
+                        {% endif %}
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Projects</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Events</a>
+                    </li>
+                    {% if user.is_staff %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'admin:index' %}">Site administration</a>
+                        </li>
                     {% endif %}
+                </ul>
+                <form class="d-flex my-3 my-lg-0 me-lg-5" action="{% url "catalog:search_results" %}" method="get" role="search">
+                    <label class="visually-hidden" for="search-input">Search artworks</label>
+                    <input class="form-control rounded-0 border-secondary" 
+                        type="search" name="q" placeholder="Search artworks..."/>
+                    <button class="btn btn-dark rounded-0 border-secondary" type="submit" >
+                        <i class="bi bi-search"></i>
+                    </button>
+                </form>
+                {% if user.is_authenticated %}
+                    <a class="nav-link" href="{% url "users:profile" %}">
+                        {% if user.profile.avatar %}
+                            <img class="rounded-circle" src="{{ user.profile.avatar_thumbnail.url }}"
+                            alt= {{ user.username|default:"UserName" }}/>
+                        {% else %}
+                            <img class="rounded-circle" src="{% static "catalog/img/default_avatar_thumbnail.jpg" %}" 
+                            alt= {{ user.username|default:"UserName" }}/>
+                        {% endif %}
                     </a>
-                </div>
-                <div class="p-2">
-                    <form id="logout-form" method="post" action="{% url 'logout' %}">
+                    <form class="form-inline" id="logout-form" method="post" action="{% url 'logout' %}">
                         {% csrf_token %}
-                        <button type="submit" class="btn btn btn-secondary">Logout</button>
+                        <button class="btn btn-dark rounded-0 border-secondary" type="submit" > 
+                            Logout
+                        </button>
                     </form>
-                </div>
-            {% else %}
-                <div class="p-2">
-                    <a class="btn_auth btn btn-sm btn-outline-secondary"
-                        href="{% url 'login' %}">
-                        Login
-                    </a>
-                    <a class="btn_auth btn btn-sm btn-outline-secondary"
-                        href="{% url "users:signup" %}">
-                        Signup
-                    </a>
-                </div>
-            {% endif %}
+                {% else %}
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'login' %}">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url "users:signup" %}">Signup</a>
+                        </li>
+                    </ul>    
+                {% endif %}
+            </div>    
         </div>
-    </div>
+    </nav>
 </header>
