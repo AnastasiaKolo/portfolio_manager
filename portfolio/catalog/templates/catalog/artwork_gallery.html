@@ -1,0 +1,36 @@
+<div class="container-lg text-center">
+    {# artwork listings #}
+    {% if artworks|length == 0 %}
+    {# Display error message instead of empty artwork list #}
+        <div class="my-5 py-5">
+            <p class="fs-5 py-4">Sorry, no artworks were found.</p>
+        </div>
+    {% else %}
+        <div class="mt-1 mb-5">
+            <div class="row justify-content-lg-center">
+            {% for artwork in artworks %}
+                <div class="col-lg-4 my-3 my-lg-4 gx-3 mx-lg-3 mx-xxl-5 justify-content-center d-flex">
+                    <div class="border bg-light">
+                        <a href="{{ artwork.get_absolute_url }}">
+                            <img src="{{ artwork.image_thumbnail.url }}" alt="{{ artwork.title }}" class="img-fluid">
+                        </a>
+                        <p class="pt-4 pb-0 px-3">
+                            <a class="h5 text-dark text-decoration-none" href="{{ artwork.get_absolute_url }}">
+                            {{ artwork.title }}
+                            </a>
+                        </p>
+                        <div class="pb-3 text-muted">
+                            <i class="bi bi-calendar-event px-1"></i> {{ artwork.created|date:"F Y" }}
+                        </div>
+                    </div>
+                </div>
+                {% if forloop.counter == 2 or forloop.counter == 4 %} {# 2 artworks per row #}
+                    </div>
+                    <div class="row justify-content-lg-center">
+                {% endif %}
+            {% endfor %}
+            </div>
+        </div>
+    {% endif %}{# End of `artworks|length == 0` conditional block #}
+    {% include "base/paginator.html" %}
+</div>

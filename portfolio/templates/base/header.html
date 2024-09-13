@@ -17,9 +17,9 @@
                             Artists
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="{% url "catalog:artist_list" %}">List</a>
+                        <a class="dropdown-item" href="{% url "catalog:artist_list" %}">List artists</a>
                         {% if user.is_staff %}
-                            <a class="dropdown-item" href="{% url "catalog:artist_create" %}">Add</a>
+                            <a class="dropdown-item" href="{% url "catalog:artist_create" %}">Add artist</a>
                         {% endif %}
                     </li>
                     <li class="nav-item dropdown">
@@ -29,14 +29,14 @@
                             Artworks
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="{% url "catalog:index" %}">List</a>
+                        <a class="dropdown-item" href="{% url "catalog:index" %}">Gallery</a>
                         {% if user.is_authenticated %}
-                            <a class="dropdown-item" href="{% url "catalog:artwork_upload" %}">Add</a>
+                            <a class="dropdown-item" href="{% url "catalog:artwork_upload" %}">Add artwork</a>
                         {% endif %}
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{% url "catalog:tag_list" %}">Artwork tags</a>
                         {% if user.is_authenticated %}
-                            <a class="dropdown-item" href="{% url "catalog:tag_create" %}">Add</a>
+                            <a class="dropdown-item" href="{% url "catalog:tag_create" %}">Add tag</a>
                         {% endif %}
                         </div>
                     </li>
@@ -55,7 +55,7 @@
                 <form class="d-flex my-3 my-lg-0 me-lg-5" action="{% url "catalog:search_results" %}" method="get" role="search">
                     <label class="visually-hidden" for="search-input">Search artworks</label>
                     <input class="form-control rounded-0 border-secondary" 
-                        type="search" name="q" placeholder="Search artworks..."/>
+                        type="search" name="query" placeholder="Search artworks..."/>
                     <button class="btn btn-dark rounded-0 border-secondary" type="submit" >
                         <i class="bi bi-search"></i>
                     </button>

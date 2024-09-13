@@ -162,7 +162,7 @@ EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 MAX_FILE_SIZE = 102400
 
 # pagination settings
-PAGINATE_ARTWORKS = 10
+PAGINATE_ARTWORKS = 2
 PAGINATE_ARTISTS = 5
 
 # gallery settings

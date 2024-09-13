@@ -1,25 +1,29 @@
-{% if page_obj.has_other_pages %}
-<ul class="pagination pagination-centered">
+{% if page_obj.paginator.num_pages > 1 %}
+<div class="row justify-content-center d-flex align-items-center mb-5">
+    <div class="col-5 text-end fs-4">
+    <span class="px-3 px-md-5">
     {% if page_obj.has_previous %}
-        <li class="page-item">
-            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">
-                <span aria-hidden="true">&laquo;</span>
-            </a>
-        </li>
+        <a class="link-secondary" href="?{% if search_query %}query={{ search_query }}&{% endif %}page=1{% if sorting != 'default' %}&sort={{ sorting }}{% endif %}">&laquo;</a>
+    </span>
+    <span class="px-3 px-md-5">
+        <a class="link-secondary" href="?{% if search_query %}query={{ search_query }}&{% endif %}page={{ page_obj.previous_page_number }}{% if sorting != 'default' %}&sort={{ sorting }}{% endif %}">{{ page_obj.previous_page_number }}</a>
     {% endif %}
+    </span>
+    </div>
 
-    {% for i in page_obj.paginator.page_range %}
-        <li class="page-item" {% if page_obj.number == i %} class="active" {% endif %}>
-            <a class="page-link" href="?page={{i}}">{{i}}</a>
-        </li>
-    {% endfor %}
+    <div class="col-2 text-center">
+    <span class="h1" aria-current="page">{{ page_obj.number }}</span>
+    </div>
 
+    <div class="col-5 text-start fs-4">
+    <span class="px-3 px-md-5">
     {% if page_obj.has_next %}
-        <li class="page-item">
-            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">
-                <span aria-hidden="true">&raquo;</span>
-            </a>
-        </li>
+        <a class="link-secondary" href="?{% if search_query %}query={{ search_query }}&{% endif %}page={{ page_obj.next_page_number }}{% if sorting != 'default' %}&sort={{ sorting }}{% endif %}">{{ page_obj.next_page_number }}</a>
+    </span>
+    <span class="px-3 px-md-5">
+        <a class="link-secondary" href="?{% if search_query %}query={{ search_query }}&{% endif %}page={{ page_obj.paginator.num_pages }}{% if sorting != 'default' %}&sort={{ sorting }}{% endif %}">&raquo;</a>
     {% endif %}
-</ul>
+    </span>
+    </div>
+</div>
 {% endif %}

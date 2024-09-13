@@ -18,6 +18,7 @@ class Tag(models.Model):
         return f"{self.text}"
 
     class Meta:
+        """ Model metadata options """
         constraints = [
             models.UniqueConstraint(
                 models.functions.Lower('text'),
@@ -43,6 +44,7 @@ class Category(models.Model):
     description = models.CharField(max_length=2000, help_text="Enter category description")
 
     class Meta:
+        """ Model metadata options """
         constraints = [
             models.UniqueConstraint(
                 models.functions.Lower('name'),
@@ -81,6 +83,17 @@ class Artist(models.Model):
         format='JPEG',
         options={'quality': 90})
 
+    class Meta:
+        """ Model metadata options """
+        constraints = [
+            models.UniqueConstraint(
+                models.functions.Lower('alias'),
+                name='alias_case_insensitive_unique',
+                violation_error_message = "Artist already exists (case insensitive match)"
+            ),
+        ]
+        ordering = ["alias"]
+
     def __str__(self):
         return f"{self.alias}"
 
@@ -118,6 +131,9 @@ class Artwork(models.Model):
         options={'quality': 90})
     published = models.BooleanField(default=True)
 
+    class Meta:
+        """ Model metadata options """
+        ordering = ['-created']
 
     def __str__(self):
         return f"{self.title}, {self.created}"
@@ -157,6 +173,10 @@ class Project(models.Model):
         processors=[SmartResize(256, 256)],
         format='JPEG',
         options={'quality': 90})
+
+    class Meta:
+        """ Model metadata options """
+        ordering = ['-created']
 
     def __str__(self):
         return f"{self.name}"
@@ -198,6 +218,10 @@ class Event(models.Model):
         processors=[SmartResize(256, 256)],
         format='JPEG',
         options={'quality': 90})
+
+    class Meta:
+        """ Model metadata options """
+        ordering = ['-date']
 
     def __str__(self):
         return f"{self.name}"
