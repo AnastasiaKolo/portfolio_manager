@@ -1,6 +1,66 @@
 {% extends "base/generic.html" %}
 {% load static %}
+
 {% block content %}
+<div class="container-lg text-center">
+    <img srcset="{{ artwork.image_thumbnail.url }} 550w,
+        {{ artwork.image.url }} 2000w"
+        sizes="(max-width:600px) 95vw, 80vw"
+        src="{{ artwork.image.url }}"
+        class="img-fluid border border-muted border-4" alt="{{ artwork.title }}">
+</div>
+<div class="container-lg text-center">  
+    <h1 class="display-6 pt-4">{{ artwork.title }} by {{ artwork.author }}</h1>
+    <div class="row justify-content-md-center pt-3 pb-4 gy-2 mb-lg-3 text-success">
+        <div class="col-md-auto px-5">
+            <i class="bi bi-brush text-dark"></i> {{ artwork.materials }}
+        </div>
+        <div class="col-md-auto px-5">
+            <i class="bi bi-calendar-event text-dark px-1"></i> {{ artwork.created|date:"F Y" }}
+        </div>
+    </div>
+    <div class="row justify-content-lg-center">
+        <div class="col-lg-9">
+            {{ artwork.description|linebreaks }}
+            {% if artwork.projects.all|length > 0 %}
+            <div class="row justify-content-md-center py-4 gx-2 lh-lg">
+                <div class="col-md-auto">
+                    <span class="fw-bold fst-italic">Projects:</span>
+                </div>
+                <div class="col-md-auto">
+                    {% for project in artwork.projects.all %}
+                        <span class="px-1">
+                            <a class="link-success" href="{{ project.get_absolute_url }}">{{ project.title }}</a>
+                        </span>
+                        {% if not forloop.last %}<span>|</span>{% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+            {% if artwork.tags.all|length > 0 %}
+            <div class="row justify-content-md-center py-4 gx-2 lh-lg">
+                <div class="col-md-auto">
+                    <span class="fw-bold fst-italic">Tags:</span>
+                </div>
+                <div class="col-md-auto">
+                    {% for tag in artwork.tags.all %}
+                        <span class="px-1">
+                            <a class="link-success" href="{{ tag.get_absolute_url }}">{{ tag.text }}</a>
+                        </span>
+                        {% if not forloop.last %}<span>|</span>{% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+
+<!--=======================================-->
+{% comment %} {% block content %}
     <h3><b>{{ artwork.title }}</b> by {{ artwork.author }}</h3>
     <p>
         <!-- author detail link not yet defined -->
@@ -26,4 +86,4 @@
         </p>
     {% endif %}
     {% include "catalog/artwork_buttons.html" %}
-{% endblock %}
+{% endblock %} {% endcomment %}
