@@ -105,6 +105,7 @@ class ArtworkDetailView(DetailView):
 class BaseDetailWithArtworksView(DetailView):
     """ Base class for displaying an object with related artworks """
     artworks_paginate_by = settings.PAGINATE_ARTWORKS
+    # queryset: QuerySet
 
     def get_context_data(self, **kwargs):
         """ Get list of related artworks """
@@ -143,7 +144,7 @@ class ProjectDetailView(BaseDetailWithArtworksView):
 
 
 class EventDetailView(BaseDetailWithArtworksView):
-    """ Shows Event details"""
+    """ Shows Project details"""
     model = Event
     template_name = "catalog/event_detail.html"
     context_object_name = "event"
