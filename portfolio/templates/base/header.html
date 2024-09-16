@@ -45,8 +45,18 @@
                         {% endif %}
                         </div>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url "catalog:event_list" %}">Events</a>
+                    <li class="nav-item dropdown">
+                        <a 
+                            class="nav-link dropdown-toggle" href="#" id="navbarDropdown" 
+                            role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Events
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{% url "catalog:event_list" %}">Calendar</a>
+                        {% if user.is_staff %}
+                            <a class="dropdown-item" href="{% url "catalog:event_create" %}">Add event</a>
+                        {% endif %}
+                        </div>
                     </li>
                     {% if user.is_staff %}
                         <li class="nav-item">

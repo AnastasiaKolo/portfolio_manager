@@ -13,11 +13,11 @@
                                 {{ artist.alias|truncatewords:10 }}
                             </a>
                             <img src="{{ artist.image_thumbnail.url }}" height=25 class="img-thumbnail" alt="Image not found">
-                            <p class="card-text">{{ artist.bio|truncatewords:20 }}</p>
+                            <p class="card-text">{{ artist.bio|truncatewords:100 }}</p>
                             
                         </div>
                         <div class="card-footer text-muted">
-                            <img src="{{ artist.image_thumbnail.url }}"/>
+                            {{ artist.statement|truncatewords:100 }}
                         </div>
                     </div>
                 {% endfor %}

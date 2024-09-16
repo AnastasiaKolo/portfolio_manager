@@ -160,7 +160,7 @@ class Artwork(models.Model):
 class Project(models.Model):
     """ A project can unite several artworks """
     title = models.CharField(max_length=200, help_text="Enter project title")
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.ForeignKey(Artist, on_delete=models.CASCADE)
     description = models.TextField(max_length=5000, help_text="Enter project description")
     created = models.DateTimeField("date created", default=timezone.now)
     artworks = models.ManyToManyField(Artwork, related_name="projects",

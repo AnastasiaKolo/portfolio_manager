@@ -102,14 +102,12 @@ class ArtworkDetailView(DetailView):
     context_object_name = "artwork"
 
 
-class ArtistDetailView(DetailView):
-    """ Shows Artist details"""
-    model = Artist
-    template_name = "catalog/artist_detail.html"
-    context_object_name = "artist"
+class BaseDetailWithArtworksView(DetailView):
+    """ Base class for displaying an object with related artworks """
     artworks_paginate_by = settings.PAGINATE_ARTWORKS
 
     def get_context_data(self, **kwargs):
+        """ Get list of related artworks """
         context = super().get_context_data(**kwargs)
         
         artworks_page = self.request.GET.get("page", 1)
@@ -130,6 +128,26 @@ class ArtistDetailView(DetailView):
 
         return context
 
+class ArtistDetailView(BaseDetailWithArtworksView):
+    """ Shows Artist details"""
+    model = Artist
+    template_name = "catalog/artist_detail.html"
+    context_object_name = "artist"
+
+
+class ProjectDetailView(BaseDetailWithArtworksView):
+    """ Shows Project details"""
+    model = Project
+    template_name = "catalog/project_detail.html"
+    context_object_name = "project"
+
+
+class EventDetailView(BaseDetailWithArtworksView):
+    """ Shows Event details"""
+    model = Event
+    template_name = "catalog/event_detail.html"
+    context_object_name = "event"
+
 
 class TagCreate(LoginRequiredMixin, CreateView):
     """ Create new tag """
@@ -148,3 +166,15 @@ class ArtistCreate(LoginRequiredMixin, CreateView):
     """ Create Artist """
     model = Artist
     form_class = ArtistForm
+
+
+class ProjectCreate(LoginRequiredMixin, CreateView):
+    """ Create Project """
+    model = Project
+    form_class = ProjectForm
+
+
+class EventCreate(LoginRequiredMixin, CreateView):
+    """ Create Event """
+    model = Event
+    form_class = EventForm
