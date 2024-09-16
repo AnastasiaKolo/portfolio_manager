@@ -26,7 +26,7 @@
                         <a 
                             class="nav-link dropdown-toggle" href="#" id="navbarDropdown" 
                             role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Artworks
+                            Art & Projects
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                         <a class="dropdown-item" href="{% url "catalog:index" %}">Gallery</a>
@@ -38,13 +38,15 @@
                         {% if user.is_authenticated %}
                             <a class="dropdown-item" href="{% url "catalog:tag_create" %}">Add tag</a>
                         {% endif %}
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{% url "catalog:project_list" %}">List projects</a>
+                        {% if user.is_staff %}
+                            <a class="dropdown-item" href="{% url "catalog:project_create" %}">Add project</a>
+                        {% endif %}
                         </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Projects</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">Events</a>
+                        <a class="nav-link" href="{% url "catalog:event_list" %}">Events</a>
                     </li>
                     {% if user.is_staff %}
                         <li class="nav-item">

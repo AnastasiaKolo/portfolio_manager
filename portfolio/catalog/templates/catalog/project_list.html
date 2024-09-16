@@ -1,0 +1,31 @@
+{% extends "base/generic.html" %}
+{% load static %}
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm">
+            <h3>{{ title }}</h3>
+            {% if projects %}
+                {% for project in projects %}
+                    <div class="card">
+                        <div class="card-body">
+                            <a href="{% url 'catalog:project_detail' project.id %}">
+                                {{ project.title|truncatewords:10 }}
+                            </a>
+                            <img src="{{ project.image_thumbnail.url }}" height=25 class="img-thumbnail" alt="Image not found">
+                            <p class="card-text">{{ project.description|truncatewords:20 }}</p>
+                            
+                        </div>
+                        <div class="card-footer text-muted">
+                            <img src="{{ project.image_thumbnail.url }}"/>
+                        </div>
+                    </div>
+                {% endfor %}
+                {% include "base/paginator.html" with page_obj=page_obj %}
+            {% else %}
+                <p>No projects are available.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -28,6 +28,23 @@ class ArtistListView(ListView):
     paginate_by = settings.PAGINATE_ARTISTS
 
 
+class ProjectListView(ListView):
+    """ View for listing all Projects """
+    template_name = "catalog/project_list.html"
+    context_object_name = "projects"
+    allow_empty = True
+    model = Project
+
+
+
+class EventListView(ListView):
+    """ View for listing all events """
+    template_name = "catalog/event_list.html"
+    context_object_name = "events"
+    allow_empty = True
+    model = Event
+
+
 class BaseArtworkListView(ListView):
     """ View for artworks list (search results, tags, etc.)"""
     template_name = "catalog/artwork_list.html"
@@ -112,6 +129,7 @@ class ArtistDetailView(DetailView):
         context["artworks"] = artworks_page_obj.object_list
 
         return context
+
 
 class TagCreate(LoginRequiredMixin, CreateView):
     """ Create new tag """

@@ -1,0 +1,14 @@
+{% extends "base/generic.html" %}
+{% load static %}
+{% block content %}
+    <h3><b>{{ event.name }} {{ event.date|date:"F Y" }}</b></h3>
+    <p><img src="{{ event.poster_thumbnail.url }}"/></p>
+    {% if event.description %}
+        <p>Description: {{ event.description }}</p>
+    {% endif %}
+    {% if event.link %}
+        <p>{{ event.link }}</p>
+    {% endif %}
+    {% include "catalog/artwork_gallery.html" %}
+
+{% endblock %}

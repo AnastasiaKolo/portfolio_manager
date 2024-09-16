@@ -12,10 +12,13 @@
 <div class="container-lg text-center">  
     <h1 class="display-6 pt-4">{{ artwork.title }} by {{ artwork.author }}</h1>
     <div class="row justify-content-md-center pt-3 pb-4 gy-2 mb-lg-3 text-success">
-        <div class="col-md-auto px-5">
+        <div class="col-md-auto px-3">
+            {{ artwork.category }}
+        </div>
+        <div class="col-md-auto px-3">
             <i class="bi bi-brush text-dark"></i> {{ artwork.materials }}
         </div>
-        <div class="col-md-auto px-5">
+        <div class="col-md-auto px-3">
             <i class="bi bi-calendar-event text-dark px-1"></i> {{ artwork.created|date:"F Y" }}
         </div>
     </div>
@@ -57,33 +60,3 @@
 </div>
 {% endblock %}
 
-
-
-<!--=======================================-->
-{% comment %} {% block content %}
-    <h3><b>{{ artwork.title }}</b> by {{ artwork.author }}</h3>
-    <p>
-        <!-- author detail link not yet defined -->
-        <a href="#">
-            {% if artwork.author.profile.avatar %}
-                <img src="{{ artwork.author.profile.avatar_thumbnail.url }}"/>
-            {% else %}
-                <img src="{% static "catalog/img/default_avatar_thumbnail.jpg" %}"/>
-            {% endif %}
-        </a> 
-        {{ artwork.created }}
-    </p>
-    <p><img src="{{ artwork.image.url }}"  class="img-fluid" alt="Oops! Image is absent" /></p>
-    <p>Category: {{ artwork.category }}</p>
-    {% if artwork.description %}
-        <p>Description: {{ artwork.description }}</p>
-    {% endif %}
-    {% if artwork.tags.all %}
-        <p><strong>Tags:</strong> 
-            {% for tag in artwork.tags.all %}
-                <a href="{% url 'catalog:tag_detail' tag.text %}">{{ tag.text }}</a>
-            {% endfor %}
-        </p>
-    {% endif %}
-    {% include "catalog/artwork_buttons.html" %}
-{% endblock %} {% endcomment %}

@@ -1,0 +1,11 @@
+{% extends "base/generic.html" %}
+{% load static %}
+{% block content %}
+    <h3><b>{{ project.title }} {{ project.created|date:"F Y" }}</b></h3>
+    <p><img src="{{ project.image_thumbnail.url }}"/></p>
+    {% if project.description %}
+        <p>Description: {{ project.description }}</p>
+    {% endif %}
+    {% include "catalog/artwork_gallery.html" %}
+
+{% endblock %}
